@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import close from '../../../assets/images/close.png'
-import './SelectedItems.scss'
+import './SelectedItems.scss';
 
 class SelectedItems extends Component {
     renderItems=(items)=>{
@@ -9,9 +9,9 @@ class SelectedItems extends Component {
             selectedItems.push(
                 <div className="col-md-6" key={key}>
                     <div className="items">
-                        <img src={close} className="closeIcon" onClick={()=>this.props.onTournamentRemove(item)}/>
+                        <img src={close} className="closeIcon" onClick={()=>this.props.onTournamentRemove(item)} alt=""/>
                         <div className="itemsImage">
-                            <img src={item.image} alt="image"/>
+                            <img src={item.image} alt={item.title}/>
                         </div>
                         <div className="itemsInfo">
                             <h6>{item.title}</h6>
@@ -27,11 +27,11 @@ class SelectedItems extends Component {
         return (
             <div className="selectedContainer">
                 <div className="row">
-                    {this.renderItems(this.props.items)}
+                    {this.renderItems(this.props.selectedItems)}
                 </div>
             </div>
         );
     }
 }
 
-export default  SelectedItems
+export default SelectedItems

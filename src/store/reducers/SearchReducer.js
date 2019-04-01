@@ -3,45 +3,50 @@ const defaultState = {
     fetched: false,
     data: [],
     error: false,
+    selectedItems: []
 }
 
 const searchReducer = (state = defaultState, action) => {
     const { type, payload } = action;
     switch (type) {
         case "SEARCH_PENDING":
-            state = Object.assign({}, state, {
+            return {
+                ...state,
                 fetching: true,
                 fetched: false,
                 error: false
-            })
-            break;
+            }
         case "SEARCH_RESLOVE":
-            state = Object.assign({}, state, {
+            return {
+                ...state,
                 fetching: false,
                 fetched: true,
                 data: payload,
                 error: false
-            })
-            break;
+            }
         case "SEARCH_REJECT":
-            state = Object.assign({}, state, {
+            return {
+                ...state,
                 fetching: false,
                 fetched: false,
                 data: [],
                 error: action.err
-            })
-            break;
+            }
+        case "SET_SELECTED_ITEMS": 
+            return {
+                ...state,
+                selectedItems: payload
+            }
         case "RESET_REDUCER":
-            state = Object.assign({}, state, {
+            return {
+                ...state,
                 fetching: false,
                 fetched: false,
                 data: [],
                 error: false,
-            })
-            break;
-        default: state = defaultState;
+            }
+        default: return state;
     }
-    return state;
 }
 
 export default searchReducer;

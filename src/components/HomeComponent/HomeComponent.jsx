@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Search from './Search/Search';
 import SelectedItems from './SelectedItems/SelectedItems';
 import "./HomeComponent.scss";
-import {findIndex,filter} from 'lodash';
 
 class HomeComponent extends Component {
     constructor(props) {
@@ -10,56 +9,30 @@ class HomeComponent extends Component {
         this.state = {
             q: "",
             dropDown: true,
-            selectedItems: []
         };
-    }
-    componentWillMount(){
-        if(localStorage.selectedItems){
-            let items = JSON.parse(localStorage.selectedItems)
-            this.setState({
-                selectedItems: items
-            })
-        }
+        this.timeOut = 0
     }
     componentWillUnmount() {
         document.removeEventListener("click", this.closeOnBlur)
     }
 
-    onSearch=(value)=>{
+    onSearch = (value) => {
         document.addEventListener("click", this.closeOnBlur);
-        this.setState({q: value,dropDown: true},()=>{
-            if(this.state.q.length>2){
+        this.setState({ q: value, dropDown: true })
+        clearTimeout(this.timeout);
+        if(value.length>2){
+            this.timeout = setTimeout(() => {
                 this.props.Search(this.state.q)
-            }else{
-                this.props.resetSearchReducer()
-            }
-        })
+            }, 500);
+        }else{
+            this.props.resetSearchReducer()
+        }
     }
 
     closeOnBlur = (e) => {
-        this.setState({dropDown: false, q: ""})
+        this.setState({ dropDown: false, q: "" })
         document.removeEventListener("click", this.closeOnBlur)
     };
-
-    onTournamentSelect=(item)=>{
-        let selectedItems = this.state.selectedItems;
-        if(selectedItems.length>0 && findIndex(selectedItems,(o)=> o.id===item.id)===-1){
-            selectedItems.push(item)
-        }else if(selectedItems.length===0){
-            selectedItems.push(item)
-        }
-        this.setState({selectedItems},()=>{
-            localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
-        })
-    }
-
-    onTournamentRemove=(item)=>{
-        let selectedItems = this.state.selectedItems;
-        selectedItems = filter(selectedItems,(o)=> o.id !== item.id)
-        this.setState({selectedItems},()=>{
-            localStorage.setItem("selectedItems", JSON.stringify(selectedItems));
-        })
-    }
 
     render() {
         return (
@@ -69,15 +42,16 @@ class HomeComponent extends Component {
                         <Search
                             q={this.state.q}
                             onSearch={this.onSearch}
-                            searchResults={this.props.SearchReducer.data}
+                            searchResults={this.props.searchResults}
                             dropDown={this.state.dropDown}
-                            onTournamentSelect={this.onTournamentSelect}
+                            selectedItems={this.props.selectedItems}
+                            onTournamentSelect={this.props.onTournamentSelect}
                         />
                     </div>
-                    {this.state.selectedItems.length>0 && <div className="col-xl-8 col-lg-9 col-md-12">
+                    {this.props.selectedItems.length>0 && <div className="col-xl-8 col-lg-9 col-md-12">
                         <SelectedItems
-                            items={this.state.selectedItems}
-                            onTournamentRemove={this.onTournamentRemove}
+                            selectedItems={this.props.selectedItems}
+                            onTournamentRemove={this.props.onTournamentRemove}
                         />
                     </div>}
                 </div>

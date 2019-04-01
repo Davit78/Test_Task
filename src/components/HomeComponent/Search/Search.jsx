@@ -1,7 +1,7 @@
-import React, {PureComponent} from 'react';
+import React, { Component } from 'react';
 import './Search.scss'
 
-class Search extends PureComponent  {
+class Search extends Component {
     renderResults = (data) => {
         let results = [];
         data.map((item, key) => {
@@ -9,7 +9,7 @@ class Search extends PureComponent  {
                 results.push(
                     <div className="items" key={key} id={item.id} onClick={() => this.props.onTournamentSelect(item)}>
                         <div className="itemsImage">
-                            <img src={item.image} alt="image" />
+                            <img src={item.image} alt={item.title}/>
                         </div>
                         <div className="itemsInfo">
                             <h6>{item.title}</h6>

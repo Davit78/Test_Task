@@ -9,6 +9,13 @@ export const Search = (q) => {
             .catch((error) => dispatch({ type: "SEARCH_REJECT", err: error }))
     }
 };
+
+export const setSelectedItems=(items)=>{
+    return {
+        type: "SET_SELECTED_ITEMS",
+        payload: items
+    }
+}
 export const resetSearchReducer = () => {
     return { type: 'RESET_REDUCER'};
   }
